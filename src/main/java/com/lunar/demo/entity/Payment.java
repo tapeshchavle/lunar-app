@@ -108,7 +108,7 @@ public class Payment {
     private User user;
     
     public enum PaymentMethod {
-        CREDIT_CARD, DEBIT_CARD, PAYPAL, STRIPE, BANK_TRANSFER, 
+        CREDIT_CARD, DEBIT_CARD, PAYPAL, STRIPE, RAZORPAY, BANK_TRANSFER, 
         CASH, CHECK, CRYPTO, WALLET, OTHER
     }
     
