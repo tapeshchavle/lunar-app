@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -34,7 +35,6 @@ public class BookingService {
     private final TicketTypeRepository ticketTypeRepository;
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
-    private final QrCodeService qrCodeService;
     
     @Transactional
     public BookingResponse createBooking(BookingCreateRequest request) {
@@ -108,13 +108,13 @@ public class BookingService {
         booking.setTotalAmount(totalAmount);
         booking.setServiceFee(serviceFee);
         booking.setTaxAmount(taxAmount);
-        booking.setBookingItems(bookingItems);
+        booking.setBookingItems(new HashSet<>(bookingItems));
         
         booking = bookingRepository.save(booking);
         
         // Generate tickets
         List<Ticket> tickets = generateTickets(booking);
-        booking.setTickets(tickets);
+        booking.setTickets(new HashSet<>(tickets));
         
         log.info("Booking created successfully with ID: {} and reference: {}", 
                 booking.getId(), booking.getBookingReference());
