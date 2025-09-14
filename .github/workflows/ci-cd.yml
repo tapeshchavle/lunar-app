@@ -13,21 +13,6 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_DB: lunar_events_test
-          POSTGRES_USER: test_user
-          POSTGRES_PASSWORD: test_password
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
 
     steps:
     - name: Checkout code
@@ -47,11 +32,15 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
 
     - name: Run tests
-      run: mvn clean test
+      run: mvn clean test -Dspring.profiles.active=test
       env:
-        SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/lunar_events_test
-        SPRING_DATASOURCE_USERNAME: test_user
-        SPRING_DATASOURCE_PASSWORD: test_password
+        SPRING_PROFILES_ACTIVE: test
+        JWT_SECRET: test-secret-key-for-testing-only
+        RAZORPAY_KEY_ID: rzp_test_test_key
+        RAZORPAY_KEY_SECRET: test_secret
+        RAZORPAY_WEBHOOK_SECRET: test_webhook_secret
+        MAIL_USERNAME: test@example.com
+        MAIL_PASSWORD: test-password
 
   build:
     needs: test
